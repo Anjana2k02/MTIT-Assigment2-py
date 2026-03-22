@@ -1,0 +1,93 @@
+version: "3.9"
+
+networks:
+  restaurant-net:
+    driver: bridge
+
+services:
+  api-gateway:
+    build: ./api-gateway
+    ports:
+      - "8080:8080"
+    environment:
+      - ORDER_SERVICE_URL=http://order-service:8001
+      - MENU_SERVICE_URL=http://menu-service:8002
+      - BILLING_SERVICE_URL=http://billing-service:8003
+      - TABLE_SERVICE_URL=http://table-service:8004
+      - STORE_SERVICE_URL=http://store-service:8005
+      - DELIVERY_SERVICE_URL=http://delivery-service:8006
+    depends_on:
+      - order-service
+      - menu-service
+      - billing-service
+      - table-service
+      - store-service
+      - delivery-service
+    networks:
+      - restaurant-net
+
+  order-service:
+    build: ./order-service
+    ports:
+      - "8001:8001"
+    environment:
+      - SERVICE_NAME=order-service
+      - SERVICE_PORT=8001
+      - DATABASE_URL=sqlite+aiosqlite:///./order.db
+    networks:
+      - restaurant-net
+
+  menu-service:
+    build: ./menu-service
+    ports:
+      - "8002:8002"
+    environment:
+      - SERVICE_NAME=menu-service
+      - SERVICE_PORT=8002
+      - DATABASE_URL=sqlite+aiosqlite:///./menu.db
+    networks:
+      - restaurant-net
+
+  billing-service:
+    build: ./billing-service
+    ports:
+      - "8003:8003"
+    environment:
+      - SERVICE_NAME=billing-service
+      - SERVICE_PORT=8003
+      - DATABASE_URL=sqlite+aiosqlite:///./billing.db
+    networks:
+      - restaurant-net
+
+  table-service:
+    build: ./table-service
+    ports:
+      - "8004:8004"
+    environment:
+      - SERVICE_NAME=table-service
+      - SERVICE_PORT=8004
+      - DATABASE_URL=sqlite+aiosqlite:///./table.db
+    networks:
+      - restaurant-net
+
+  store-service:
+    build: ./store-service
+    ports:
+      - "8005:8005"
+    environment:
+      - SERVICE_NAME=store-service
+      - SERVICE_PORT=8005
+      - DATABASE_URL=sqlite+aiosqlite:///./store.db
+    networks:
+      - restaurant-net
+
+  delivery-service:
+    build: ./delivery-service
+    ports:
+      - "8006:8006"
+    environment:
+      - SERVICE_NAME=delivery-service
+      - SERVICE_PORT=8006
+      - DATABASE_URL=sqlite+aiosqlite:///./delivery.db
+    networks:
+      - restaurant-net
