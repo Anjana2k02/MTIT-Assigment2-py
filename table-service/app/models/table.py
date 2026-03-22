@@ -1,6 +1,5 @@
 import enum
-from sqlalchemy import Column, Integer, Enum
-from app.database import Base
+from beanie import Document
 
 
 class TableStatus(str, enum.Enum):
@@ -9,10 +8,10 @@ class TableStatus(str, enum.Enum):
     RESERVED = "reserved"
 
 
-class Table(Base):
-    __tablename__ = "tables"
+class Table(Document):
+    table_number: int
+    capacity: int
+    status: TableStatus = TableStatus.AVAILABLE
 
-    id = Column(Integer, primary_key=True, index=True)
-    table_number = Column(Integer, unique=True, nullable=False)
-    capacity = Column(Integer, nullable=False)
-    status = Column(Enum(TableStatus), default=TableStatus.AVAILABLE)
+    class Settings:
+        name = "tables"

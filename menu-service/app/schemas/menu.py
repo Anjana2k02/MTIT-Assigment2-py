@@ -23,7 +23,7 @@ class MenuItemUpdate(BaseModel):
 
 
 class MenuItemResponse(MenuItemBase):
-    id: int
+    id: Optional[str] = None
 
     class Config:
         from_attributes = True

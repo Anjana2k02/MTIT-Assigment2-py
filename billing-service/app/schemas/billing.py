@@ -25,7 +25,7 @@ class InvoiceUpdate(BaseModel):
 
 
 class InvoiceResponse(InvoiceBase):
-    id: int
+    id: Optional[str] = None
     status: InvoiceStatus
     created_at: datetime
     updated_at: Optional[datetime] = None

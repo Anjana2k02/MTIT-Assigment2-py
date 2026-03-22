@@ -1,13 +1,13 @@
-from sqlalchemy import Column, Integer, String, Float, Boolean
-from app.database import Base
+from beanie import Document
+from typing import Optional
 
 
-class MenuItem(Base):
-    __tablename__ = "menu_items"
+class MenuItem(Document):
+    name: str
+    description: Optional[str] = None
+    price: float
+    category: str
+    available: bool = True
 
-    id = Column(Integer, primary_key=True, index=True)
-    name = Column(String, nullable=False)
-    description = Column(String, nullable=True)
-    price = Column(Float, nullable=False)
-    category = Column(String, nullable=False)
-    available = Column(Boolean, default=True)
+    class Settings:
+        name = "menu_items"

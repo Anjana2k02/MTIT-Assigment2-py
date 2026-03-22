@@ -1,7 +1,8 @@
 import enum
-from sqlalchemy import Column, Integer, String, DateTime, Enum
-from sqlalchemy.sql import func
-from app.database import Base
+from datetime import datetime
+from typing import Optional
+from beanie import Document
+from pydantic import Field
 
 
 class DeliveryStatus(str, enum.Enum):
@@ -12,13 +13,13 @@ class DeliveryStatus(str, enum.Enum):
     FAILED = "failed"
 
 
-class Delivery(Base):
-    __tablename__ = "deliveries"
+class Delivery(Document):
+    order_id: int
+    customer_address: str
+    driver_name: Optional[str] = None
+    status: DeliveryStatus = DeliveryStatus.PENDING
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+    updated_at: Optional[datetime] = None
 
-    id = Column(Integer, primary_key=True, index=True)
-    order_id = Column(Integer, nullable=False)
-    customer_address = Column(String, nullable=False)
-    driver_name = Column(String, nullable=True)
-    status = Column(Enum(DeliveryStatus), default=DeliveryStatus.PENDING)
-    created_at = Column(DateTime(timezone=True), server_default=func.now())
-    updated_at = Column(DateTime(timezone=True), onupdate=func.now())
+    class Settings:
+        name = "deliveries"

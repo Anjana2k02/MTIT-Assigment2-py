@@ -1,7 +1,8 @@
 import enum
-from sqlalchemy import Column, Integer, String, Float, DateTime, Enum
-from sqlalchemy.sql import func
-from app.database import Base
+from datetime import datetime
+from typing import Optional
+from beanie import Document
+from pydantic import Field
 
 
 class OrderStatus(str, enum.Enum):
@@ -13,13 +14,13 @@ class OrderStatus(str, enum.Enum):
     CANCELLED = "cancelled"
 
 
-class Order(Base):
-    __tablename__ = "orders"
+class Order(Document):
+    customer_name: str
+    table_id: Optional[int] = None
+    status: OrderStatus = OrderStatus.PENDING
+    total_amount: float = 0.0
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+    updated_at: Optional[datetime] = None
 
-    id = Column(Integer, primary_key=True, index=True)
-    customer_name = Column(String, nullable=False)
-    table_id = Column(Integer, nullable=True)
-    status = Column(Enum(OrderStatus), default=OrderStatus.PENDING)
-    total_amount = Column(Float, default=0.0)
-    created_at = Column(DateTime(timezone=True), server_default=func.now())
-    updated_at = Column(DateTime(timezone=True), onupdate=func.now())
+    class Settings:
+        name = "orders"

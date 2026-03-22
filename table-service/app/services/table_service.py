@@ -1,43 +1,39 @@
-from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select
 from typing import List, Optional
+from beanie import PydanticObjectId
 from app.models.table import Table
 from app.schemas.table import TableCreate, TableUpdate
 
 
-async def get_all(db: AsyncSession) -> List[Table]:
-    result = await db.execute(select(Table))
-    return result.scalars().all()
+async def get_all() -> List[Table]:
+    return await Table.find_all().to_list()
 
 
-async def get_by_id(db: AsyncSession, table_id: int) -> Optional[Table]:
-    result = await db.execute(select(Table).where(Table.id == table_id))
-    return result.scalar_one_or_none()
+async def get_by_id(table_id: str) -> Optional[Table]:
+    try:
+        return await Table.get(PydanticObjectId(table_id))
+    except Exception:
+        return None
 
 
-async def create(db: AsyncSession, data: TableCreate) -> Table:
+async def create(data: TableCreate) -> Table:
     table = Table(**data.model_dump())
-    db.add(table)
-    await db.commit()
-    await db.refresh(table)
+    await table.insert()
     return table
 
 
-async def update(db: AsyncSession, table_id: int, data: TableUpdate) -> Optional[Table]:
-    table = await get_by_id(db, table_id)
+async def update(table_id: str, data: TableUpdate) -> Optional[Table]:
+    table = await get_by_id(table_id)
     if not table:
         return None
     for field, value in data.model_dump(exclude_unset=True).items():
         setattr(table, field, value)
-    await db.commit()
-    await db.refresh(table)
+    await table.save()
     return table
 
 
-async def delete(db: AsyncSession, table_id: int) -> bool:
-    table = await get_by_id(db, table_id)
+async def delete(table_id: str) -> bool:
+    table = await get_by_id(table_id)
     if not table:
         return False
-    await db.delete(table)
-    await db.commit()
+    await table.delete()
     return True

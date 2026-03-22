@@ -35,7 +35,8 @@ def ensure_runtime_dependencies():
     try:
         import uvicorn  # noqa: F401
         import fastapi  # noqa: F401
-        import greenlet  # noqa: F401
+        import beanie  # noqa: F401
+        import motor  # noqa: F401
         import jose  # noqa: F401
         return
     except ModuleNotFoundError:

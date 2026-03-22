@@ -1,43 +1,42 @@
-from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select
 from typing import List, Optional
+from datetime import datetime
+from beanie import PydanticObjectId
 from app.models.delivery import Delivery
 from app.schemas.delivery import DeliveryCreate, DeliveryUpdate
 
 
-async def get_all(db: AsyncSession) -> List[Delivery]:
-    result = await db.execute(select(Delivery))
-    return result.scalars().all()
+async def get_all() -> List[Delivery]:
+    return await Delivery.find_all().to_list()
 
 
-async def get_by_id(db: AsyncSession, delivery_id: int) -> Optional[Delivery]:
-    result = await db.execute(select(Delivery).where(Delivery.id == delivery_id))
-    return result.scalar_one_or_none()
+async def get_by_id(delivery_id: str) -> Optional[Delivery]:
+    try:
+        return await Delivery.get(PydanticObjectId(delivery_id))
+    except Exception:
+        return None
 
 
-async def create(db: AsyncSession, data: DeliveryCreate) -> Delivery:
+async def create(data: DeliveryCreate) -> Delivery:
     delivery = Delivery(**data.model_dump())
-    db.add(delivery)
-    await db.commit()
-    await db.refresh(delivery)
+    await delivery.insert()
     return delivery
 
 
-async def update(db: AsyncSession, delivery_id: int, data: DeliveryUpdate) -> Optional[Delivery]:
-    delivery = await get_by_id(db, delivery_id)
+async def update(delivery_id: str, data: DeliveryUpdate) -> Optional[Delivery]:
+    delivery = await get_by_id(delivery_id)
     if not delivery:
         return None
-    for field, value in data.model_dump(exclude_unset=True).items():
+    update_data = data.model_dump(exclude_unset=True)
+    update_data["updated_at"] = datetime.utcnow()
+    for field, value in update_data.items():
         setattr(delivery, field, value)
-    await db.commit()
-    await db.refresh(delivery)
+    await delivery.save()
     return delivery
 
 
-async def delete(db: AsyncSession, delivery_id: int) -> bool:
-    delivery = await get_by_id(db, delivery_id)
+async def delete(delivery_id: str) -> bool:
+    delivery = await get_by_id(delivery_id)
     if not delivery:
         return False
-    await db.delete(delivery)
-    await db.commit()
+    await delivery.delete()
     return True

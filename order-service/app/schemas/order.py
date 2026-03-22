@@ -22,7 +22,7 @@ class OrderUpdate(BaseModel):
 
 
 class OrderResponse(OrderBase):
-    id: int
+    id: Optional[str] = None
     status: OrderStatus
     created_at: datetime
     updated_at: Optional[datetime] = None

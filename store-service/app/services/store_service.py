@@ -1,43 +1,42 @@
-from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select
 from typing import List, Optional
+from datetime import datetime
+from beanie import PydanticObjectId
 from app.models.store import StoreItem
 from app.schemas.store import StoreItemCreate, StoreItemUpdate
 
 
-async def get_all(db: AsyncSession) -> List[StoreItem]:
-    result = await db.execute(select(StoreItem))
-    return result.scalars().all()
+async def get_all() -> List[StoreItem]:
+    return await StoreItem.find_all().to_list()
 
 
-async def get_by_id(db: AsyncSession, item_id: int) -> Optional[StoreItem]:
-    result = await db.execute(select(StoreItem).where(StoreItem.id == item_id))
-    return result.scalar_one_or_none()
+async def get_by_id(item_id: str) -> Optional[StoreItem]:
+    try:
+        return await StoreItem.get(PydanticObjectId(item_id))
+    except Exception:
+        return None
 
 
-async def create(db: AsyncSession, data: StoreItemCreate) -> StoreItem:
+async def create(data: StoreItemCreate) -> StoreItem:
     item = StoreItem(**data.model_dump())
-    db.add(item)
-    await db.commit()
-    await db.refresh(item)
+    await item.insert()
     return item
 
 
-async def update(db: AsyncSession, item_id: int, data: StoreItemUpdate) -> Optional[StoreItem]:
-    item = await get_by_id(db, item_id)
+async def update(item_id: str, data: StoreItemUpdate) -> Optional[StoreItem]:
+    item = await get_by_id(item_id)
     if not item:
         return None
-    for field, value in data.model_dump(exclude_unset=True).items():
+    update_data = data.model_dump(exclude_unset=True)
+    update_data["updated_at"] = datetime.utcnow()
+    for field, value in update_data.items():
         setattr(item, field, value)
-    await db.commit()
-    await db.refresh(item)
+    await item.save()
     return item
 
 
-async def delete(db: AsyncSession, item_id: int) -> bool:
-    item = await get_by_id(db, item_id)
+async def delete(item_id: str) -> bool:
+    item = await get_by_id(item_id)
     if not item:
         return False
-    await db.delete(item)
-    await db.commit()
+    await item.delete()
     return True

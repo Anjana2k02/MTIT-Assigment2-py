@@ -22,7 +22,7 @@ class StoreItemUpdate(BaseModel):
 
 
 class StoreItemResponse(StoreItemBase):
-    id: int
+    id: Optional[str] = None
     updated_at: Optional[datetime] = None
 
     class Config:

@@ -20,7 +20,7 @@ class TableUpdate(BaseModel):
 
 
 class TableResponse(TableBase):
-    id: int
+    id: Optional[str] = None
 
     class Config:
         from_attributes = True

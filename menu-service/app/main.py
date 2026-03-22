@@ -3,13 +3,13 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.routes import menu as menu_router
 from app.config import settings
-from app.database import engine, Base
+from app.database import init_db
+from app.models.menu import MenuItem
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    async with engine.begin() as conn:
-        await conn.run_sync(Base.metadata.create_all)
+    await init_db([MenuItem])
     yield
 
 

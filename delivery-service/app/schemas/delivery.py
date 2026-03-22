@@ -21,7 +21,7 @@ class DeliveryUpdate(BaseModel):
 
 
 class DeliveryResponse(DeliveryBase):
-    id: int
+    id: Optional[str] = None
     status: DeliveryStatus
     created_at: datetime
     updated_at: Optional[datetime] = None

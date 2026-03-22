@@ -29,9 +29,8 @@ app = FastAPI(
     description="Central entry point — routes all requests to downstream microservices.",
     version="1.0.0",
     openapi_tags=tags_metadata,
-    docs_url=None,
-    redoc_url=None,
-    openapi_url=None,
+    docs_url="/docs",
+    redoc_url="/redoc",
 )
 
 app.add_middleware(

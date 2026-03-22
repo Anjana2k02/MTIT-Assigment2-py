@@ -36,7 +36,8 @@ services:
     environment:
       - SERVICE_NAME=order-service
       - SERVICE_PORT=8001
-      - DATABASE_URL=sqlite+aiosqlite:///./order.db
+      - MONGODB_URL=${MONGODB_URL}
+      - MONGO_DB_NAME=restaurant
     networks:
       - restaurant-net
 
@@ -47,7 +48,8 @@ services:
     environment:
       - SERVICE_NAME=menu-service
       - SERVICE_PORT=8002
-      - DATABASE_URL=sqlite+aiosqlite:///./menu.db
+      - MONGODB_URL=${MONGODB_URL}
+      - MONGO_DB_NAME=restaurant
     networks:
       - restaurant-net
 
@@ -58,7 +60,8 @@ services:
     environment:
       - SERVICE_NAME=billing-service
       - SERVICE_PORT=8003
-      - DATABASE_URL=sqlite+aiosqlite:///./billing.db
+      - MONGODB_URL=${MONGODB_URL}
+      - MONGO_DB_NAME=restaurant
     networks:
       - restaurant-net
 
@@ -69,7 +72,8 @@ services:
     environment:
       - SERVICE_NAME=table-service
       - SERVICE_PORT=8004
-      - DATABASE_URL=sqlite+aiosqlite:///./table.db
+      - MONGODB_URL=${MONGODB_URL}
+      - MONGO_DB_NAME=restaurant
     networks:
       - restaurant-net
 
@@ -80,7 +84,8 @@ services:
     environment:
       - SERVICE_NAME=store-service
       - SERVICE_PORT=8005
-      - DATABASE_URL=sqlite+aiosqlite:///./store.db
+      - MONGODB_URL=${MONGODB_URL}
+      - MONGO_DB_NAME=restaurant
     networks:
       - restaurant-net
 
@@ -91,6 +96,7 @@ services:
     environment:
       - SERVICE_NAME=delivery-service
       - SERVICE_PORT=8006
-      - DATABASE_URL=sqlite+aiosqlite:///./delivery.db
+      - MONGODB_URL=${MONGODB_URL}
+      - MONGO_DB_NAME=restaurant
     networks:
       - restaurant-net
