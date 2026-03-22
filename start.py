@@ -36,6 +36,7 @@ def ensure_runtime_dependencies():
         import uvicorn  # noqa: F401
         import fastapi  # noqa: F401
         import greenlet  # noqa: F401
+        import jose  # noqa: F401
         return
     except ModuleNotFoundError:
         pass

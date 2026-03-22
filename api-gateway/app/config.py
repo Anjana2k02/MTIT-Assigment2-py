@@ -2,12 +2,15 @@ from pydantic_settings import BaseSettings
 
 
 class Settings(BaseSettings):
-    ORDER_SERVICE_URL: str = "http://order-service:8001"
-    MENU_SERVICE_URL: str = "http://menu-service:8002"
-    BILLING_SERVICE_URL: str = "http://billing-service:8003"
-    TABLE_SERVICE_URL: str = "http://table-service:8004"
-    STORE_SERVICE_URL: str = "http://store-service:8005"
-    DELIVERY_SERVICE_URL: str = "http://delivery-service:8006"
+    ORDER_SERVICE_URL: str = "http://localhost:8001"
+    MENU_SERVICE_URL: str = "http://localhost:8002"
+    BILLING_SERVICE_URL: str = "http://localhost:8003"
+    TABLE_SERVICE_URL: str = "http://localhost:8004"
+    STORE_SERVICE_URL: str = "http://localhost:8005"
+    DELIVERY_SERVICE_URL: str = "http://localhost:8006"
+    JWT_SECRET: str
+    JWT_ALGORITHM: str = "HS256"
+    JWT_EXPIRE_MINUTES: int = 60
 
     class Config:
         env_file = ".env"

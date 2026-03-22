@@ -1,8 +1,13 @@
-from fastapi import APIRouter, Request, Response
+from fastapi import APIRouter, Request, Security
+from app.auth.dependencies import require_bearer_token
 from app.config import settings
 from app.routes._proxy import forward_request
 
-router = APIRouter(prefix="/tables", tags=["tables"])
+router = APIRouter(
+    prefix="/tables",
+    tags=["tables"],
+    dependencies=[Security(require_bearer_token)],
+)
 
 
 @router.api_route("", methods=["GET", "POST"])

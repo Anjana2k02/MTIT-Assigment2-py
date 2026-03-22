@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.routes import (
+    auth_routes,
     order_routes,
     menu_routes,
     billing_routes,
@@ -13,6 +14,7 @@ from app.config import settings
 import httpx
 
 tags_metadata = [
+    {"name": "auth",       "description": "Gateway authentication endpoints"},
     {"name": "orders",     "description": "Proxy → Order Service :8001"},
     {"name": "menu",       "description": "Proxy → Menu Service :8002"},
     {"name": "billing",    "description": "Proxy → Billing Service :8003"},
@@ -27,8 +29,9 @@ app = FastAPI(
     description="Central entry point — routes all requests to downstream microservices.",
     version="1.0.0",
     openapi_tags=tags_metadata,
-    docs_url="/docs",
-    redoc_url="/redoc",
+    docs_url=None,
+    redoc_url=None,
+    openapi_url=None,
 )
 
 app.add_middleware(
@@ -39,6 +42,7 @@ app.add_middleware(
 )
 app.add_middleware(LoggingMiddleware)
 
+app.include_router(auth_routes.router)
 app.include_router(order_routes.router, prefix="/api/v1")
 app.include_router(menu_routes.router, prefix="/api/v1")
 app.include_router(billing_routes.router, prefix="/api/v1")
