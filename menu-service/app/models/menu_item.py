@@ -1,13 +1,13 @@
 from datetime import datetime
-from typing import Optional
 from beanie import Document
 from pydantic import Field
 
 
-class Menu(Document):
-    menu_name: str
-    description: Optional[str] = None
+class MenuItem(Document):
+    item_id: str
+    menu_id: str
+    availability: bool = True
     created_at: datetime = Field(default_factory=datetime.utcnow)
 
     class Settings:
-        name = "menus"
+        name = "menu_items"

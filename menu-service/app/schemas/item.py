@@ -1,23 +1,28 @@
 from datetime import datetime
 from typing import Optional
 from pydantic import BaseModel, field_validator
+from app.models.item import ItemType
 
 
-class MenuBase(BaseModel):
-    menu_name: str
+class ItemBase(BaseModel):
+    item_name: str
+    item_price: float
+    item_type: ItemType
     description: Optional[str] = None
 
 
-class MenuCreate(MenuBase):
+class ItemCreate(ItemBase):
     pass
 
 
-class MenuUpdate(BaseModel):
-    menu_name: Optional[str] = None
+class ItemUpdate(BaseModel):
+    item_name: Optional[str] = None
+    item_price: Optional[float] = None
+    item_type: Optional[ItemType] = None
     description: Optional[str] = None
 
 
-class MenuResponse(MenuBase):
+class ItemResponse(ItemBase):
     id: Optional[str] = None
     created_at: datetime
 
