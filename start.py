@@ -13,7 +13,11 @@ SERVICES = [
     {"name": "table-service",    "port": 8004, "dir": "table-service"},
     {"name": "store-service",    "port": 8005, "dir": "store-service"},
     {"name": "delivery-service", "port": 8006, "dir": "delivery-service"},
+<<<<<<< HEAD
+    {"name": "user-service",      "port": 8007, "dir": "user-service"},
+=======
     {"name": "api-gateway",      "port": 8080, "dir": "api-gateway"},
+>>>>>>> 0b8fb03057b37e9d715299e38bba53733411dcd7
 ]
 
 # ANSI colors per service
@@ -40,6 +44,7 @@ def ensure_runtime_dependencies():
         import beanie  # noqa: F401
         import motor  # noqa: F401
         import jose  # noqa: F401
+        import email_validator  # noqa: F401
         return
     except ModuleNotFoundError:
         pass
