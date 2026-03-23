@@ -1,5 +1,6 @@
 import enum
 from beanie import Document
+from pydantic import Field
 
 
 class TableStatus(str, enum.Enum):
@@ -9,9 +10,9 @@ class TableStatus(str, enum.Enum):
 
 
 class Table(Document):
-    table_number: int
-    capacity: int
-    status: TableStatus = TableStatus.AVAILABLE
+    location_id: str
+    table_name: str
+    status_id: str
 
     class Settings:
         name = "tables"
