@@ -1,17 +1,10 @@
-import enum
 from beanie import Document
 
 
-class TableStatus(str, enum.Enum):
-    AVAILABLE = "available"
-    OCCUPIED = "occupied"
-    RESERVED = "reserved"
-
-
 class Table(Document):
-    table_number: int
-    capacity: int
-    status: TableStatus = TableStatus.AVAILABLE
+    location_id: str   # MongoDB ObjectId str of Location
+    table_name: str
+    status: int        # status_id (0, 1, 2) from TableStatus collection
 
     class Settings:
         name = "tables"
