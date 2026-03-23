@@ -13,11 +13,8 @@ SERVICES = [
     {"name": "table-service",    "port": 8004, "dir": "table-service"},
     {"name": "store-service",    "port": 8005, "dir": "store-service"},
     {"name": "delivery-service", "port": 8006, "dir": "delivery-service"},
-<<<<<<< HEAD
-    {"name": "user-service",      "port": 8007, "dir": "user-service"},
-=======
+    {"name": "user-service",      "port": 8007, "dir": "user-service", "health_path": "/"},
     {"name": "api-gateway",      "port": 8080, "dir": "api-gateway"},
->>>>>>> 0b8fb03057b37e9d715299e38bba53733411dcd7
 ]
 
 # ANSI colors per service
@@ -93,13 +90,21 @@ def start_service(service, color):
 
 def wait_for_health(services, timeout_seconds=60):
     deadline = time.time() + timeout_seconds
-    pending = {svc["name"]: svc["port"] for svc in services}
+    pending = {
+        svc["name"]: {
+            "port": svc["port"],
+            "health_path": svc.get("health_path", "/health"),
+        }
+        for svc in services
+    }
 
     while pending and time.time() < deadline:
-        for name, port in list(pending.items()):
+        for name, meta in list(pending.items()):
+            port = meta["port"]
+            health_path = meta["health_path"]
             try:
-                with urlopen(f"http://localhost:{port}/health", timeout=2) as resp:
-                    if resp.status == 200:
+                with urlopen(f"http://localhost:{port}{health_path}", timeout=2) as resp:
+                    if 200 <= resp.status < 400:
                         print(f"\033[92m[health]\033[0m {name} is healthy on :{port}")
                         del pending[name]
             except Exception:
@@ -109,7 +114,10 @@ def wait_for_health(services, timeout_seconds=60):
             time.sleep(1)
 
     if pending:
-        missing = ", ".join([f"{name}(:{port})" for name, port in pending.items()])
+        missing = ", ".join([
+            f"{name}(:{meta['port']}, check {meta['health_path']})"
+            for name, meta in pending.items()
+        ])
         print("\033[91mTimed out waiting for services to become healthy:\033[0m", missing)
         shutdown()
 
