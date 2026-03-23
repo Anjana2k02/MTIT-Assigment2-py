@@ -8,12 +8,14 @@ class Settings(BaseSettings):
     TABLE_SERVICE_URL: str = "http://localhost:8004"
     STORE_SERVICE_URL: str = "http://localhost:8005"
     DELIVERY_SERVICE_URL: str = "http://localhost:8006"
+    USER_SERVICE_URL: str = "http://localhost:8007"
     JWT_SECRET: str
     JWT_ALGORITHM: str = "HS256"
     JWT_EXPIRE_MINUTES: int = 60
 
     class Config:
         env_file = ".env"
+        extra = "ignore"
 
 
 settings = Settings()
