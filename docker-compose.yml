@@ -100,3 +100,13 @@ services:
       - MONGO_DB_NAME=restaurant
     networks:
       - restaurant-net
+
+  user-service:
+    build: ./user-service
+    ports:
+      - "8007:8007"
+    environment:
+      - SERVICE_NAME=user-service
+      - SERVICE_PORT=8007
+    networks:
+      - restaurant-net
