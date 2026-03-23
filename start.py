@@ -12,6 +12,7 @@ SERVICES = [
     {"name": "table-service",    "port": 8004, "dir": "table-service"},
     {"name": "store-service",    "port": 8005, "dir": "store-service"},
     {"name": "delivery-service", "port": 8006, "dir": "delivery-service"},
+    {"name": "user-service",      "port": 8007, "dir": "user-service"},
 ]
 
 # ANSI colors per service
