@@ -3,16 +3,21 @@ import threading
 import sys
 import os
 import signal
+import time
+from urllib.request import urlopen
 
 SERVICES = [
-    {"name": "api-gateway",      "port": 8080, "dir": "api-gateway"},
     {"name": "order-service",    "port": 8001, "dir": "order-service"},
     {"name": "menu-service",     "port": 8002, "dir": "menu-service"},
     {"name": "billing-service",  "port": 8003, "dir": "billing-service"},
     {"name": "table-service",    "port": 8004, "dir": "table-service"},
     {"name": "store-service",    "port": 8005, "dir": "store-service"},
     {"name": "delivery-service", "port": 8006, "dir": "delivery-service"},
+<<<<<<< HEAD
     {"name": "user-service",      "port": 8007, "dir": "user-service"},
+=======
+    {"name": "api-gateway",      "port": 8080, "dir": "api-gateway"},
+>>>>>>> 0b8fb03057b37e9d715299e38bba53733411dcd7
 ]
 
 # ANSI colors per service
@@ -86,6 +91,29 @@ def start_service(service, color):
     return proc
 
 
+def wait_for_health(services, timeout_seconds=60):
+    deadline = time.time() + timeout_seconds
+    pending = {svc["name"]: svc["port"] for svc in services}
+
+    while pending and time.time() < deadline:
+        for name, port in list(pending.items()):
+            try:
+                with urlopen(f"http://localhost:{port}/health", timeout=2) as resp:
+                    if resp.status == 200:
+                        print(f"\033[92m[health]\033[0m {name} is healthy on :{port}")
+                        del pending[name]
+            except Exception:
+                pass
+
+        if pending:
+            time.sleep(1)
+
+    if pending:
+        missing = ", ".join([f"{name}(:{port})" for name, port in pending.items()])
+        print("\033[91mTimed out waiting for services to become healthy:\033[0m", missing)
+        shutdown()
+
+
 def shutdown(sig=None, frame=None):
     print("\n\033[91mShutting down all services...\033[0m")
     for proc in processes:
@@ -101,11 +129,22 @@ if __name__ == "__main__":
 
     ensure_runtime_dependencies()
 
-    print("\033[1mStarting all services...\033[0m\n")
-    for i, service in enumerate(SERVICES):
+    print("\033[1mStarting backend services first...\033[0m\n")
+    backend_services = [s for s in SERVICES if s["name"] != "api-gateway"]
+    gateway_service = next(s for s in SERVICES if s["name"] == "api-gateway")
+
+    for i, service in enumerate(backend_services):
         color = COLORS[i % len(COLORS)]
         start_service(service, color)
         print(f"{color}[{service['name']}]{RESET} running on http://localhost:{service['port']}")
+
+    print("\n\033[1mWaiting for backend services to become healthy...\033[0m")
+    wait_for_health(backend_services)
+
+    gateway_color = COLORS[len(backend_services) % len(COLORS)]
+    print("\n\033[1mStarting API Gateway after backend readiness...\033[0m")
+    start_service(gateway_service, gateway_color)
+    print(f"{gateway_color}[{gateway_service['name']}]{RESET} running on http://localhost:{gateway_service['port']}")
 
     print("\n\033[1mAll services started. Press Ctrl+C to stop.\033[0m\n")
 
