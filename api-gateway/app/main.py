@@ -8,6 +8,7 @@ from app.routes import (
     table_routes,
     store_routes,
     delivery_routes,
+    user_routes,
 )
 from app.middleware.logging import LoggingMiddleware
 from app.config import settings
@@ -21,6 +22,7 @@ tags_metadata = [
     {"name": "tables",     "description": "Proxy → Table Service :8004"},
     {"name": "store",      "description": "Proxy → Store Service :8005"},
     {"name": "deliveries", "description": "Proxy → Delivery Service :8006"},
+    {"name": "users",      "description": "Proxy → User Service :8007"},
     {"name": "gateway",    "description": "Gateway health & downstream status"},
 ]
 
@@ -41,6 +43,7 @@ app.add_middleware(
 )
 app.add_middleware(LoggingMiddleware)
 
+
 app.include_router(auth_routes.router)
 app.include_router(order_routes.router, prefix="/api/v1")
 app.include_router(menu_routes.router, prefix="/api/v1")
@@ -48,6 +51,7 @@ app.include_router(billing_routes.router, prefix="/api/v1")
 app.include_router(table_routes.router, prefix="/api/v1")
 app.include_router(store_routes.router, prefix="/api/v1")
 app.include_router(delivery_routes.router, prefix="/api/v1")
+app.include_router(user_routes.router, prefix="/api/v1")
 
 
 @app.get("/health", tags=["gateway"])
