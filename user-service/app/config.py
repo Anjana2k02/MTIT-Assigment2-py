@@ -1,3 +1,6 @@
 import os
 
-DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./user.db")
+MONGODB_URL = os.getenv(
+	"MONGODB_URL", "mongodb://localhost:27017"
+)
+MONGO_DB_NAME = os.getenv("MONGO_DB_NAME", "restaurant")

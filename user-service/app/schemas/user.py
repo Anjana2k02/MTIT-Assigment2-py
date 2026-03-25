@@ -7,7 +7,7 @@ class UserBase(BaseModel):
     email: EmailStr
     address: Optional[str] = None
     phoneNo: Optional[str] = None
-    role_id: Optional[int] = None
+    role_id: Optional[str] = None
 
 
 class UserSignUp(BaseModel):
@@ -34,12 +34,9 @@ class UserUpdate(BaseModel):
     email: Optional[EmailStr] = None
     address: Optional[str] = None
     phoneNo: Optional[str] = None
-    role_id: Optional[int] = None
+    role_id: Optional[str] = None
     password: Optional[str] = None
 
 
 class UserOut(UserBase):
-    user_id: int
-
-    class Config:
-        orm_mode = True
+    user_id: str

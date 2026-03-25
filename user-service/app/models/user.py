@@ -1,15 +1,13 @@
-from sqlalchemy import Column, Integer, String, ForeignKey
-from sqlalchemy.orm import relationship
-from app.database import Base
+from dataclasses import dataclass
+from typing import Optional
 
-class User(Base):
-    __tablename__ = "user"
-    user_id = Column(Integer, primary_key=True, index=True)
-    username = Column(String, unique=True, index=True, nullable=False)
-    email = Column(String, unique=True, index=True, nullable=False)
-    password_hash = Column(String, nullable=True)
-    address = Column(String, nullable=True)
-    phoneNo = Column(String, nullable=True)
-    role_id = Column(Integer, ForeignKey("role.role_id"), nullable=False)
 
-    role = relationship("Role", back_populates="users")
+@dataclass
+class User:
+    user_id: str
+    username: str
+    email: str
+    password_hash: Optional[str] = None
+    address: Optional[str] = None
+    phoneNo: Optional[str] = None
+    role_id: Optional[str] = None
