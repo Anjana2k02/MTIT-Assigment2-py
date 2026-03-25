@@ -9,5 +9,6 @@ class Store(Document):
     description: Optional[str] = None
     created_at: datetime = Field(default_factory=datetime.utcnow)
 
+
     class Settings:
         name = "stores"
