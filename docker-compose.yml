@@ -20,12 +20,24 @@ services:
       - JWT_ALGORITHM=HS256
       - JWT_EXPIRE_MINUTES=60
     depends_on:
-      - order-service
-      - menu-service
-      - billing-service
-      - table-service
-      - store-service
-      - delivery-service
+      order-service:
+        condition: service_healthy
+      menu-service:
+        condition: service_healthy
+      billing-service:
+        condition: service_healthy
+      table-service:
+        condition: service_healthy
+      store-service:
+        condition: service_healthy
+      delivery-service:
+        condition: service_healthy
+    healthcheck:
+      test: [ "CMD", "python", "-c", "import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://localhost:8080/health').getcode()==200 else 1)" ]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+      start_period: 20s
     networks:
       - restaurant-net
 
@@ -38,6 +50,12 @@ services:
       - SERVICE_PORT=8001
       - MONGODB_URL=${MONGODB_URL}
       - MONGO_DB_NAME=restaurant
+    healthcheck:
+      test: [ "CMD", "python", "-c", "import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://localhost:8001/health').getcode()==200 else 1)" ]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+      start_period: 20s
     networks:
       - restaurant-net
 
@@ -50,6 +68,12 @@ services:
       - SERVICE_PORT=8002
       - MONGODB_URL=${MONGODB_URL}
       - MONGO_DB_NAME=restaurant
+    healthcheck:
+      test: [ "CMD", "python", "-c", "import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://localhost:8002/health').getcode()==200 else 1)" ]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+      start_period: 20s
     networks:
       - restaurant-net
 
@@ -62,6 +86,12 @@ services:
       - SERVICE_PORT=8003
       - MONGODB_URL=${MONGODB_URL}
       - MONGO_DB_NAME=restaurant
+    healthcheck:
+      test: [ "CMD", "python", "-c", "import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://localhost:8003/health').getcode()==200 else 1)" ]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+      start_period: 20s
     networks:
       - restaurant-net
 
@@ -74,6 +104,12 @@ services:
       - SERVICE_PORT=8004
       - MONGODB_URL=${MONGODB_URL}
       - MONGO_DB_NAME=restaurant
+    healthcheck:
+      test: [ "CMD", "python", "-c", "import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://localhost:8004/health').getcode()==200 else 1)" ]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+      start_period: 20s
     networks:
       - restaurant-net
 
@@ -86,6 +122,12 @@ services:
       - SERVICE_PORT=8005
       - MONGODB_URL=${MONGODB_URL}
       - MONGO_DB_NAME=restaurant
+    healthcheck:
+      test: [ "CMD", "python", "-c", "import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://localhost:8005/health').getcode()==200 else 1)" ]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+      start_period: 20s
     networks:
       - restaurant-net
 
@@ -98,5 +140,21 @@ services:
       - SERVICE_PORT=8006
       - MONGODB_URL=${MONGODB_URL}
       - MONGO_DB_NAME=restaurant
+    healthcheck:
+      test: [ "CMD", "python", "-c", "import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://localhost:8006/health').getcode()==200 else 1)" ]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+      start_period: 20s
+    networks:
+      - restaurant-net
+
+  user-service:
+    build: ./user-service
+    ports:
+      - "8007:8007"
+    environment:
+      - SERVICE_NAME=user-service
+      - SERVICE_PORT=8007
     networks:
       - restaurant-net

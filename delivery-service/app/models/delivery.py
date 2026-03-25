@@ -15,7 +15,9 @@ class DeliveryStatus(str, enum.Enum):
 
 class Delivery(Document):
     order_id: int
+    customer_name: str
     customer_address: str
+    customer_phone_number: str
     driver_name: Optional[str] = None
     status: DeliveryStatus = DeliveryStatus.PENDING
     created_at: datetime = Field(default_factory=datetime.utcnow)
