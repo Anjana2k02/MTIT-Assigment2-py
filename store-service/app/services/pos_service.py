@@ -2,6 +2,7 @@ from typing import List, Optional
 from beanie import PydanticObjectId
 from app.models.pos import POS
 from app.schemas.pos import POSCreate, POSUpdate
+from app.services import store_service
 
 
 async def get_all() -> List[POS]:
@@ -19,7 +20,10 @@ async def get_by_store_id(store_id: str) -> List[POS]:
     return await POS.find(POS.store_id == store_id).to_list()
 
 
-async def create(data: POSCreate) -> POS:
+async def create(data: POSCreate) -> Optional[POS]:
+    store = await store_service.get_by_id(data.store_id)
+    if not store:
+        return None
     pos = POS(**data.model_dump())
     await pos.insert()
     return pos

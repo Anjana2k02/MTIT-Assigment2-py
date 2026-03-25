@@ -16,7 +16,8 @@ async def lifespan(app: FastAPI):
 
 
 tags_metadata = [
-    {"name": "store",  "description": "Track inventory items — quantity, unit and low-stock threshold."},
+    {"name": "stores", "description": "Manage stores — create, view, update, and delete store locations."},
+    {"name": "pos",    "description": "Manage POS terminals — each POS is linked to a store."},
     {"name": "health", "description": "Service health check."},
 ]
 
@@ -38,6 +39,7 @@ app.add_middleware(
 )
 
 app.include_router(store_router.router, prefix="/api/v1")
+app.include_router(pos_router.router, prefix="/api/v1")
 
 
 @app.get("/health", tags=["health"])

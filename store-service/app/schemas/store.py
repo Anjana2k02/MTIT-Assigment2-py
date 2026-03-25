@@ -19,7 +19,7 @@ class StoreUpdate(BaseModel):
 
 class StoreResponse(StoreBase):
     id: Optional[str] = None
-    creat_at: datetime
+    created_at: datetime
 
     @field_validator('id', mode='before')
     @classmethod

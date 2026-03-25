@@ -5,7 +5,7 @@ from pydantic import BaseModel, field_validator
 
 class POSBase(BaseModel):
     store_id: str
-    POS_name: str
+    pos_name: str
     description: Optional[str] = None
 
 
@@ -15,13 +15,13 @@ class POSCreate(POSBase):
 
 class POSUpdate(BaseModel):
     store_id: Optional[str] = None
-    POS_name: Optional[str] = None
+    pos_name: Optional[str] = None
     description: Optional[str] = None
 
 
 class POSResponse(POSBase):
     id: Optional[str] = None
-    create_At: datetime
+    created_at: datetime
 
     @field_validator('id', mode='before')
     @classmethod
