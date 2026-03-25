@@ -10,5 +10,6 @@ class Location(Document):
     availability: bool = True
     created_at: datetime = Field(default_factory=datetime.utcnow)
 
+
     class Settings:
         name = "locations"
