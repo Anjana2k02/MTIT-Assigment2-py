@@ -3,21 +3,23 @@ from typing import Optional
 from pydantic import BaseModel, field_validator
 
 
-class StoreBase(BaseModel):
-    store_name: str
+class POSBase(BaseModel):
+    store_id: str
+    pos_name: str
     description: Optional[str] = None
 
 
-class StoreCreate(StoreBase):
+class POSCreate(POSBase):
     pass
 
 
-class StoreUpdate(BaseModel):
-    store_name: Optional[str] = None
+class POSUpdate(BaseModel):
+    store_id: Optional[str] = None
+    pos_name: Optional[str] = None
     description: Optional[str] = None
 
 
-class StoreResponse(StoreBase):
+class POSResponse(POSBase):
     id: Optional[str] = None
     created_at: datetime
 

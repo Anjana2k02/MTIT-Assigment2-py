@@ -1,42 +1,42 @@
 from typing import List, Optional
-from datetime import datetime
 from beanie import PydanticObjectId
-from app.models.store import StoreItem
-from app.schemas.store import StoreItemCreate, StoreItemUpdate
+from app.models.store import Store
+from app.schemas.store import StoreCreate, StoreUpdate
 
 
-async def get_all() -> List[StoreItem]:
-    return await StoreItem.find_all().to_list()
+async def get_all() -> List[Store]:
+    return await Store.find_all().to_list()
 
 
-async def get_by_id(item_id: str) -> Optional[StoreItem]:
+async def get_by_id(store_id: str) -> Optional[Store]:
     try:
-        return await StoreItem.get(PydanticObjectId(item_id))
+        return await Store.get(PydanticObjectId(store_id))
     except Exception:
         return None
 
 
-async def create(data: StoreItemCreate) -> StoreItem:
-    item = StoreItem(**data.model_dump())
-    await item.insert()
-    return item
+async def create(data: StoreCreate) -> Store:
+    store = Store(**data.model_dump())
+    await store.insert()
+    return store
 
 
-async def update(item_id: str, data: StoreItemUpdate) -> Optional[StoreItem]:
-    item = await get_by_id(item_id)
-    if not item:
+async def update(store_id: str, data: StoreUpdate) -> Optional[Store]:
+    store = await get_by_id(store_id)
+    if not store:
         return None
-    update_data = data.model_dump(exclude_unset=True)
-    update_data["updated_at"] = datetime.utcnow()
-    for field, value in update_data.items():
-        setattr(item, field, value)
-    await item.save()
-    return item
+
+    for field, value in data.model_dump(exclude_unset=True).items():
+        setattr(store, field, value)
+
+    await store.save()
+    return store
 
 
-async def delete(item_id: str) -> bool:
-    item = await get_by_id(item_id)
-    if not item:
+async def delete(store_id: str) -> bool:
+    store = await get_by_id(store_id)
+    if not store:
         return False
-    await item.delete()
+
+    await store.delete()
     return True

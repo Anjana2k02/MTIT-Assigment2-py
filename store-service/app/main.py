@@ -2,19 +2,22 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.routes import store as store_router
+from app.routes import store_routes as pos_router
 from app.config import settings
 from app.database import init_db
-from app.models.store import StoreItem
+from app.models.store import Store
+from app.models.pos import POS
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    await init_db([StoreItem])
+    await init_db()
     yield
 
 
 tags_metadata = [
-    {"name": "store",  "description": "Track inventory items — quantity, unit and low-stock threshold."},
+    {"name": "stores", "description": "Manage stores — create, view, update, and delete store locations."},
+    {"name": "pos",    "description": "Manage POS terminals — each POS is linked to a store."},
     {"name": "health", "description": "Service health check."},
 ]
 
@@ -36,6 +39,7 @@ app.add_middleware(
 )
 
 app.include_router(store_router.router, prefix="/api/v1")
+app.include_router(pos_router.router, prefix="/api/v1")
 
 
 @app.get("/health", tags=["health"])
