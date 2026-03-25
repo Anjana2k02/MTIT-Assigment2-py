@@ -5,7 +5,8 @@ from app.models.delivery import DeliveryStatus
 
 
 class DeliveryBase(BaseModel):
-    order_id: int
+    order_id: str
+    billing_id: str
     customer_name: str
     customer_address: str
     customer_phone_number: str
@@ -18,7 +19,8 @@ class DeliveryCreate(DeliveryBase):
 
 
 class DeliveryUpdate(BaseModel):
-    order_id: Optional[int] = None
+    order_id: Optional[str] = None
+    billing_id: Optional[str] = None
     customer_name: Optional[str] = None
     customer_address: Optional[str] = None
     customer_phone_number: Optional[str] = None
@@ -28,7 +30,8 @@ class DeliveryUpdate(BaseModel):
 
 class DeliveryResponse(DeliveryBase):
     id: Optional[str] = None
-    order_id: int
+    order_id: str
+    billing_id: Optional[str] = None
     customer_name: str
     customer_address: str
     customer_phone_number: str

@@ -1,0 +1,15 @@
+{
+	"create_delivery": {
+		"order_id": "ORD-10045",
+		"billing_id": "67f6c3f3b8e1b9f25c6f9d91",
+		"customer_name": "John Doe",
+		"customer_address": "12 Lake Road, Colombo",
+		"customer_phone_number": "+94770000000",
+		"driver_name": "Kamal",
+		"status": "pending"
+	},
+	"update_delivery_legacy_compatible": {
+		"status": "in_transit",
+		"driver_name": "Sunil"
+	}
+}
