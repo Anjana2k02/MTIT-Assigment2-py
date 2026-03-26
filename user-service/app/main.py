@@ -1,11 +1,21 @@
 from fastapi import FastAPI
 from app.routes import user, role
-from app.database import Base, engine
-
-# Create tables
-Base.metadata.create_all(bind=engine)
+from app.database import get_database
 
 app = FastAPI(title="User Service", docs_url="/docs")
+
+
+@app.on_event("startup")
+def startup() -> None:
+    db = get_database()
+    db["users"].create_index("username", unique=True)
+    db["users"].create_index("email", unique=True)
+    db["roles"].create_index("name", unique=True)
+    db["roles"].update_one(
+        {"name": "customer"},
+        {"$setOnInsert": {"description": "Default role for self-registered users"}},
+        upsert=True,
+    )
 
 app.include_router(user.router)
 app.include_router(role.router)

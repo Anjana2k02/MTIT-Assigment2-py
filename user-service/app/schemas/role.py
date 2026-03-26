@@ -8,9 +8,9 @@ class RoleBase(BaseModel):
 class RoleCreate(RoleBase):
     pass
 
-class RoleUpdate(RoleBase):
-    pass
+class RoleUpdate(BaseModel):
+    name: Optional[str] = None
+    description: Optional[str] = None
 
 class RoleOut(RoleBase):
-    role_id: int
-    model_config = ConfigDict(from_attributes=True)
+    role_id: str
