@@ -1,6 +1,5 @@
 import os
 
-DEFAULT_MONGODB_URL = "mongodb+srv://Admin:password@mtit.9eco5id.mongodb.net/restaurant?appName=mtit"
+DEFAULT_DATABASE_URL = "sqlite:///./user.db"
 
-MONGODB_URL = os.getenv("MONGODB_URL") or DEFAULT_MONGODB_URL
-MONGO_DB_NAME = os.getenv("MONGO_DB_NAME") or "restaurant"
+DATABASE_URL = os.getenv("DATABASE_URL") or DEFAULT_DATABASE_URL
