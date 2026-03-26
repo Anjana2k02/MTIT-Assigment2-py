@@ -19,7 +19,8 @@ tags_metadata = [
     {"name": "menu",       "description": "Proxy → Menu Service :8002"},
     {"name": "billing",    "description": "Proxy → Billing Service :8003"},
     {"name": "tables",     "description": "Proxy → Table Service :8004"},
-    {"name": "store",      "description": "Proxy → Store Service :8005"},
+    {"name": "stores",     "description": "Proxy → Store Service :8005"},
+    {"name": "pos",        "description": "Proxy → Store Service :8005 — POS terminals"},
     {"name": "deliveries", "description": "Proxy → Delivery Service :8006"},
     {"name": "gateway",    "description": "Gateway health & downstream status"},
 ]
