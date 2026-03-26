@@ -34,7 +34,13 @@ async def update(pos_id: str, data: POSUpdate) -> Optional[POS]:
     if not pos:
         return None
 
-    for field, value in data.model_dump(exclude_unset=True).items():
+    update_data = data.model_dump(exclude_unset=True)
+    if "store_id" in update_data:
+        store = await store_service.get_by_id(update_data["store_id"])
+        if not store:
+            return None
+
+    for field, value in update_data.items():
         setattr(pos, field, value)
 
     await pos.save()

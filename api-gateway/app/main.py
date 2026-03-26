@@ -8,6 +8,7 @@ from app.routes import (
     table_routes,
     store_routes,
     delivery_routes,
+    user_routes,
 )
 from app.middleware.logging import LoggingMiddleware
 from app.config import settings
@@ -22,6 +23,8 @@ tags_metadata = [
     {"name": "stores",     "description": "Proxy → Store Service :8005"},
     {"name": "pos",        "description": "Proxy → Store Service :8005 — POS terminals"},
     {"name": "deliveries", "description": "Proxy → Delivery Service :8006"},
+    {"name": "users",      "description": "Proxy → User Service :8007"},
+    {"name": "roles",      "description": "Proxy → User Service :8007"},
     {"name": "gateway",    "description": "Gateway health & downstream status"},
 ]
 
@@ -49,6 +52,7 @@ app.include_router(billing_routes.router, prefix="/api/v1")
 app.include_router(table_routes.router, prefix="/api/v1")
 app.include_router(store_routes.router, prefix="/api/v1")
 app.include_router(delivery_routes.router, prefix="/api/v1")
+app.include_router(user_routes.router, prefix="/api/v1")
 
 
 @app.get("/health", tags=["gateway"])
@@ -60,6 +64,7 @@ async def health():
         "table": settings.TABLE_SERVICE_URL,
         "store": settings.STORE_SERVICE_URL,
         "delivery": settings.DELIVERY_SERVICE_URL,
+        "user": settings.USER_SERVICE_URL,
     }
     statuses = {}
     async with httpx.AsyncClient(timeout=3.0) as client:
