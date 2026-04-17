@@ -4,17 +4,32 @@ from app.config import settings
 from app.routes._proxy import forward_request
 
 router = APIRouter(
-    prefix="/orders",
+    prefix="",
     tags=["orders"],
     dependencies=[Security(require_bearer_token)],
 )
 
 
-@router.api_route("", methods=["GET", "POST"])
-async def proxy_orders_root(request: Request):
-    return await forward_request(request, f"{settings.ORDER_SERVICE_URL}/api/v1/orders")
+@router.get("/orders/")
+async def get_orders(request: Request):
+    return await forward_request(request, f"{settings.ORDER_SERVICE_URL}/api/v1/orders/")
 
 
-@router.api_route("/{path:path}", methods=["GET", "POST", "PUT", "DELETE", "PATCH"])
-async def proxy_orders(request: Request, path: str):
-    return await forward_request(request, f"{settings.ORDER_SERVICE_URL}/api/v1/orders/{path}")
+@router.post("/orders/")
+async def create_order(request: Request):
+    return await forward_request(request, f"{settings.ORDER_SERVICE_URL}/api/v1/orders/")
+
+
+@router.get("/orders/{order_id}")
+async def get_order(request: Request, order_id: str):
+    return await forward_request(request, f"{settings.ORDER_SERVICE_URL}/api/v1/orders/{order_id}")
+
+
+@router.put("/orders/{order_id}")
+async def update_order(request: Request, order_id: str):
+    return await forward_request(request, f"{settings.ORDER_SERVICE_URL}/api/v1/orders/{order_id}")
+
+
+@router.delete("/orders/{order_id}")
+async def delete_order(request: Request, order_id: str):
+    return await forward_request(request, f"{settings.ORDER_SERVICE_URL}/api/v1/orders/{order_id}")

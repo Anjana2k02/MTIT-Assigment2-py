@@ -1,11 +1,9 @@
-from sqlalchemy import Column, Integer, String
-from sqlalchemy.orm import relationship
-from app.database import Base
+from dataclasses import dataclass
+from typing import Optional
 
-class Role(Base):
-    __tablename__ = "role"
-    role_id = Column(Integer, primary_key=True, index=True)
-    name = Column(String, unique=True, nullable=False)
-    description = Column(String, nullable=True)
 
-    users = relationship("User", back_populates="role")
+@dataclass
+class Role:
+    role_id: str
+    name: str
+    description: Optional[str] = None

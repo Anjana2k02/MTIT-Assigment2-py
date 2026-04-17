@@ -1,15 +1,14 @@
-from sqlalchemy import create_engine
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker
-from .config import DATABASE_URL
+from pymongo import MongoClient
+from pymongo.database import Database
 
-engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-Base = declarative_base()
+from .config import MONGO_DB_NAME, MONGODB_URL
+
+client = MongoClient(MONGODB_URL)
+
+
+def get_database() -> Database:
+    return client[MONGO_DB_NAME]
+
 
 def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
+    yield get_database()

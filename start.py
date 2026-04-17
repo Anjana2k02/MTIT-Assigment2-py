@@ -7,7 +7,6 @@ import time
 from urllib.request import urlopen
 
 SERVICES = [
-    {"name": "order-service",    "port": 8001, "dir": "order-service"},
     {"name": "menu-service",     "port": 8002, "dir": "menu-service"},
     {"name": "billing-service",  "port": 8003, "dir": "billing-service"},
     {"name": "table-service",    "port": 8004, "dir": "table-service"},

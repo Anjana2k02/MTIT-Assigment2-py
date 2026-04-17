@@ -10,31 +10,81 @@ router = APIRouter(
 )
 
 
-@router.api_route("/menus", methods=["GET", "POST"])
-async def proxy_menus_root(request: Request):
-    return await forward_request(request, f"{settings.MENU_SERVICE_URL}/api/v1/menus")
+@router.get("/menus/")
+async def get_menus(request: Request):
+    return await forward_request(request, f"{settings.MENU_SERVICE_URL}/api/v1/menus/")
 
 
-@router.api_route("/menus/{path:path}", methods=["GET", "POST", "PUT", "DELETE", "PATCH"])
-async def proxy_menus(request: Request, path: str):
-    return await forward_request(request, f"{settings.MENU_SERVICE_URL}/api/v1/menus/{path}")
+@router.post("/menus/")
+async def create_menu(request: Request):
+    return await forward_request(request, f"{settings.MENU_SERVICE_URL}/api/v1/menus/")
 
 
-@router.api_route("/items", methods=["GET", "POST"])
-async def proxy_items_root(request: Request):
-    return await forward_request(request, f"{settings.MENU_SERVICE_URL}/api/v1/items")
+@router.get("/menus/{menu_id}")
+async def get_menu(request: Request, menu_id: str):
+    return await forward_request(request, f"{settings.MENU_SERVICE_URL}/api/v1/menus/{menu_id}")
 
 
-@router.api_route("/items/{path:path}", methods=["GET", "POST", "PUT", "DELETE", "PATCH"])
-async def proxy_items(request: Request, path: str):
-    return await forward_request(request, f"{settings.MENU_SERVICE_URL}/api/v1/items/{path}")
+@router.put("/menus/{menu_id}")
+async def update_menu(request: Request, menu_id: str):
+    return await forward_request(request, f"{settings.MENU_SERVICE_URL}/api/v1/menus/{menu_id}")
 
 
-@router.api_route("/menu-items", methods=["GET", "POST"])
-async def proxy_menu_items_root(request: Request):
-    return await forward_request(request, f"{settings.MENU_SERVICE_URL}/api/v1/menu-items")
+@router.delete("/menus/{menu_id}")
+async def delete_menu(request: Request, menu_id: str):
+    return await forward_request(request, f"{settings.MENU_SERVICE_URL}/api/v1/menus/{menu_id}")
 
 
-@router.api_route("/menu-items/{path:path}", methods=["GET", "POST", "PUT", "DELETE", "PATCH"])
-async def proxy_menu_items(request: Request, path: str):
-    return await forward_request(request, f"{settings.MENU_SERVICE_URL}/api/v1/menu-items/{path}")
+@router.get("/menus/{menu_id}/items")
+async def get_items_in_menu(request: Request, menu_id: str):
+    return await forward_request(request, f"{settings.MENU_SERVICE_URL}/api/v1/menus/{menu_id}/items")
+
+
+@router.get("/items/")
+async def get_items(request: Request):
+    return await forward_request(request, f"{settings.MENU_SERVICE_URL}/api/v1/items/")
+
+
+@router.post("/items/")
+async def create_item(request: Request):
+    return await forward_request(request, f"{settings.MENU_SERVICE_URL}/api/v1/items/")
+
+
+@router.get("/items/{item_id}")
+async def get_item(request: Request, item_id: str):
+    return await forward_request(request, f"{settings.MENU_SERVICE_URL}/api/v1/items/{item_id}")
+
+
+@router.put("/items/{item_id}")
+async def update_item(request: Request, item_id: str):
+    return await forward_request(request, f"{settings.MENU_SERVICE_URL}/api/v1/items/{item_id}")
+
+
+@router.delete("/items/{item_id}")
+async def delete_item(request: Request, item_id: str):
+    return await forward_request(request, f"{settings.MENU_SERVICE_URL}/api/v1/items/{item_id}")
+
+
+@router.get("/menu-items/")
+async def get_menu_items(request: Request):
+    return await forward_request(request, f"{settings.MENU_SERVICE_URL}/api/v1/menu-items/")
+
+
+@router.post("/menu-items/")
+async def create_menu_item(request: Request):
+    return await forward_request(request, f"{settings.MENU_SERVICE_URL}/api/v1/menu-items/")
+
+
+@router.get("/menu-items/{menu_item_id}")
+async def get_menu_item(request: Request, menu_item_id: str):
+    return await forward_request(request, f"{settings.MENU_SERVICE_URL}/api/v1/menu-items/{menu_item_id}")
+
+
+@router.put("/menu-items/{menu_item_id}")
+async def update_menu_item(request: Request, menu_item_id: str):
+    return await forward_request(request, f"{settings.MENU_SERVICE_URL}/api/v1/menu-items/{menu_item_id}")
+
+
+@router.delete("/menu-items/{menu_item_id}")
+async def delete_menu_item(request: Request, menu_item_id: str):
+    return await forward_request(request, f"{settings.MENU_SERVICE_URL}/api/v1/menu-items/{menu_item_id}")

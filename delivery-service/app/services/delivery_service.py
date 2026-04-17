@@ -27,6 +27,9 @@ async def update(delivery_id: str, data: DeliveryUpdate) -> Optional[Delivery]:
     if not delivery:
         return None
     update_data = data.model_dump(exclude_unset=True)
+    # Preserve existing billing_id for legacy records when clients omit or null it.
+    if update_data.get("billing_id") is None:
+        update_data.pop("billing_id", None)
     update_data["updated_at"] = datetime.utcnow()
     for field, value in update_data.items():
         setattr(delivery, field, value)

@@ -14,7 +14,8 @@ class DeliveryStatus(str, enum.Enum):
 
 
 class Delivery(Document):
-    order_id: int
+    order_id: str
+    billing_id: Optional[str] = None
     customer_name: str
     customer_address: str
     customer_phone_number: str

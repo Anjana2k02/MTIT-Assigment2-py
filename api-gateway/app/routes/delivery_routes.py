@@ -4,17 +4,32 @@ from app.config import settings
 from app.routes._proxy import forward_request
 
 router = APIRouter(
-    prefix="/deliveries",
+    prefix="",
     tags=["deliveries"],
     dependencies=[Security(require_bearer_token)],
 )
 
 
-@router.api_route("", methods=["GET", "POST"])
-async def proxy_deliveries_root(request: Request):
-    return await forward_request(request, f"{settings.DELIVERY_SERVICE_URL}/api/v1/deliveries")
+@router.get("/deliveries/")
+async def get_deliveries(request: Request):
+    return await forward_request(request, f"{settings.DELIVERY_SERVICE_URL}/api/v1/deliveries/")
 
 
-@router.api_route("/{path:path}", methods=["GET", "POST", "PUT", "DELETE", "PATCH"])
-async def proxy_deliveries(request: Request, path: str):
-    return await forward_request(request, f"{settings.DELIVERY_SERVICE_URL}/api/v1/deliveries/{path}")
+@router.post("/deliveries/")
+async def create_delivery(request: Request):
+    return await forward_request(request, f"{settings.DELIVERY_SERVICE_URL}/api/v1/deliveries/")
+
+
+@router.get("/deliveries/{delivery_id}")
+async def get_delivery(request: Request, delivery_id: str):
+    return await forward_request(request, f"{settings.DELIVERY_SERVICE_URL}/api/v1/deliveries/{delivery_id}")
+
+
+@router.put("/deliveries/{delivery_id}")
+async def update_delivery(request: Request, delivery_id: str):
+    return await forward_request(request, f"{settings.DELIVERY_SERVICE_URL}/api/v1/deliveries/{delivery_id}")
+
+
+@router.delete("/deliveries/{delivery_id}")
+async def delete_delivery(request: Request, delivery_id: str):
+    return await forward_request(request, f"{settings.DELIVERY_SERVICE_URL}/api/v1/deliveries/{delivery_id}")
