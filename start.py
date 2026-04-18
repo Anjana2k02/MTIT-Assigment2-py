@@ -23,6 +23,23 @@ RESET  = "\033[0m"
 processes = []
 
 
+def load_root_env() -> None:
+    env_path = os.path.join(os.path.dirname(__file__), ".env")
+    if not os.path.exists(env_path):
+        return
+
+    with open(env_path, "r", encoding="utf-8") as env_file:
+        for raw_line in env_file:
+            line = raw_line.strip()
+            if not line or line.startswith("#") or "=" not in line:
+                continue
+
+            key, value = line.split("=", 1)
+            key = key.strip()
+            value = value.strip().strip('"').strip("'")
+            os.environ.setdefault(key, value)
+
+
 def stream_output(proc, label, color):
     for line in iter(proc.stdout.readline, b""):
         print(f"{color}[{label}]{RESET} {line.decode(errors='replace').rstrip()}")
@@ -134,6 +151,7 @@ if __name__ == "__main__":
     signal.signal(signal.SIGINT, shutdown)
     signal.signal(signal.SIGTERM, shutdown)
 
+    load_root_env()
     ensure_runtime_dependencies()
 
     print("\033[1mStarting backend services first...\033[0m\n")

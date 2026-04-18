@@ -1,7 +1,0 @@
-{
-  "permissions": {
-    "allow": [
-      "Bash(powershell -Command \"Rename-Item -Path ''d:\\\\Anjana\\\\SLIIT\\\\MTIT\\\\Assigment 2\\\\table-service'' -NewName ''location-creation-service''\")"
-    ]
-  }
-}
