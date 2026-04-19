@@ -1,6 +1,7 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict, field_validator
 from datetime import datetime
 from typing import Optional
+from beanie import PydanticObjectId
 from app.models.delivery import DeliveryStatus
 
 
@@ -29,7 +30,7 @@ class DeliveryUpdate(BaseModel):
 
 
 class DeliveryResponse(DeliveryBase):
-    id: Optional[str] = None
+    id: Optional[PydanticObjectId] = None
     order_id: str
     billing_id: Optional[str] = None
     customer_name: str
@@ -40,5 +41,12 @@ class DeliveryResponse(DeliveryBase):
     created_at: datetime
     updated_at: Optional[datetime] = None
 
-    class Config:
-        from_attributes = True
+    @field_validator("id", mode="before")
+    @classmethod
+    def convert_id(cls, v):
+        return str(v) if v is not None else None
+
+    model_config = ConfigDict(
+        from_attributes=True,
+        json_encoders={PydanticObjectId: str},
+    )

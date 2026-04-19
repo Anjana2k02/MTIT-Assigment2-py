@@ -10,7 +10,7 @@ A microservices-based restaurant management backend built with **FastAPI**, **Mo
 Client
   │
   ▼
-API Gateway  :8080  ──► JWT Auth (all routes except /auth/login)
+API Gateway  :8081  ──► JWT Auth (all routes except /auth/login)
   │
   ├──► Menu Service      :8002   MongoDB › restaurant.menu_items / menus
   ├──► Billing Service   :8003   MongoDB › restaurant.pos_orders / discounts
@@ -26,7 +26,7 @@ All inter-service communication passes through the gateway. Each service is inde
 
 ## Services
 
-### API Gateway — `localhost:8080`
+### API Gateway — `localhost:8081`
 
 Central entry point. Proxies requests to downstream services and enforces JWT Bearer token authentication on all routes except `/auth/login`.
 
@@ -233,7 +233,7 @@ python start.py
 
 | Service | Swagger UI |
 |---------|-----------|
-| API Gateway | http://localhost:8080/docs |
+| API Gateway | http://localhost:8081/docs |
 | Menu Service | http://localhost:8002/docs |
 | Billing Service | http://localhost:8003/docs |
 | Table Service | http://localhost:8004/docs |

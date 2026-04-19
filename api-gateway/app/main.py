@@ -56,19 +56,20 @@ app.include_router(user_routes.router, prefix="/api/v1")
 @app.get("/health", tags=["gateway"])
 async def health():
     service_urls = {
-        "order": settings.ORDER_SERVICE_URL,
-        "menu": settings.MENU_SERVICE_URL,
-        "billing": settings.BILLING_SERVICE_URL,
-        "table": settings.TABLE_SERVICE_URL,
-        "store": settings.STORE_SERVICE_URL,
-        "delivery": settings.DELIVERY_SERVICE_URL,
-        "user": settings.USER_SERVICE_URL,
+        "order": (settings.ORDER_SERVICE_URL, "/health"),
+        "menu": (settings.MENU_SERVICE_URL, "/health"),
+        "billing": (settings.BILLING_SERVICE_URL, "/health"),
+        "table": (settings.TABLE_SERVICE_URL, "/health"),
+        "store": (settings.STORE_SERVICE_URL, "/health"),
+        "delivery": (settings.DELIVERY_SERVICE_URL, "/health"),
+        # user-service exposes root health-like response at '/'.
+        "user": (settings.USER_SERVICE_URL, "/"),
     }
     statuses = {}
     async with httpx.AsyncClient(timeout=3.0) as client:
-        for name, url in service_urls.items():
+        for name, (url, path) in service_urls.items():
             try:
-                resp = await client.get(f"{url}/health")
+                resp = await client.get(f"{url}{path}")
                 statuses[name] = "healthy" if resp.status_code == 200 else "unhealthy"
             except Exception:
                 statuses[name] = "unreachable"

@@ -8,7 +8,7 @@ services:
   api-gateway:
     build: ./api-gateway
     ports:
-      - "8080:8080"
+      - "8081:8081"
     environment:
       - ORDER_SERVICE_URL=http://order-service:8001
       - MENU_SERVICE_URL=http://menu-service:8002
@@ -35,7 +35,7 @@ services:
       user-service:
         condition: service_healthy
     healthcheck:
-      test: [ "CMD", "python", "-c", "import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://localhost:8080/health').getcode()==200 else 1)" ]
+      test: [ "CMD", "python", "-c", "import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://localhost:8081/health').getcode()==200 else 1)" ]
       interval: 10s
       timeout: 5s
       retries: 6

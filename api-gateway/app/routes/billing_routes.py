@@ -1,4 +1,6 @@
-from fastapi import APIRouter, Request, Security
+from typing import Any, Dict
+
+from fastapi import APIRouter, Body, Request, Security
 from app.auth.dependencies import require_bearer_token
 from app.config import settings
 from app.routes._proxy import forward_request
@@ -27,12 +29,34 @@ async def get_pos_order(request: Request, order_id: str):
 
 
 @router.post("/pos/")
-async def create_pos_order(request: Request):
+async def create_pos_order(
+    request: Request,
+    payload: Dict[str, Any] = Body(
+        ...,
+        example={
+            "order_type": "dining",
+            "customer_name": "Alex",
+            "table_number": 4,
+            "items": [{"item_id": "MENU_ITEM_ID", "quantity": 2}],
+            "tax_rate": 0.1,
+        },
+    ),
+):
     return await forward_request(request, f"{settings.BILLING_SERVICE_URL}/api/v1/pos/")
 
 
 @router.put("/pos/{order_id}")
-async def update_pos_order(request: Request, order_id: str):
+async def update_pos_order(
+    request: Request,
+    order_id: str,
+    payload: Dict[str, Any] = Body(
+        ...,
+        example={
+            "payment_status": "paid",
+            "discount_id": "DISCOUNT_ID",
+        },
+    ),
+):
     return await forward_request(request, f"{settings.BILLING_SERVICE_URL}/api/v1/pos/{order_id}")
 
 
@@ -53,12 +77,32 @@ async def get_discount(request: Request, discount_id: str):
 
 
 @router.post("/discounts/")
-async def create_discount(request: Request):
+async def create_discount(
+    request: Request,
+    payload: Dict[str, Any] = Body(
+        ...,
+        example={
+            "code": "NEWYEAR10",
+            "discount_type": "percentage",
+            "value": 10,
+        },
+    ),
+):
     return await forward_request(request, f"{settings.BILLING_SERVICE_URL}/api/v1/discounts/")
 
 
 @router.put("/discounts/{discount_id}")
-async def update_discount(request: Request, discount_id: str):
+async def update_discount(
+    request: Request,
+    discount_id: str,
+    payload: Dict[str, Any] = Body(
+        ...,
+        example={
+            "value": 15,
+            "is_active": True,
+        },
+    ),
+):
     return await forward_request(request, f"{settings.BILLING_SERVICE_URL}/api/v1/discounts/{discount_id}")
 
 
@@ -74,6 +118,38 @@ async def get_bill(request: Request, pos_order_id: str):
 
 
 # backward-compatible legacy proxy path
-@router.api_route("/billing/{path:path}", methods=["GET", "POST", "PUT", "DELETE", "PATCH"])
-async def proxy_legacy_billing(request: Request, path: str):
+@router.get("/billing/{path:path}")
+async def legacy_billing_get(request: Request, path: str):
+    return await forward_request(request, f"{settings.BILLING_SERVICE_URL}/api/v1/billing/{path}")
+
+
+@router.post("/billing/{path:path}")
+async def legacy_billing_post(
+    request: Request,
+    path: str,
+    payload: Dict[str, Any] = Body(...),
+):
+    return await forward_request(request, f"{settings.BILLING_SERVICE_URL}/api/v1/billing/{path}")
+
+
+@router.put("/billing/{path:path}")
+async def legacy_billing_put(
+    request: Request,
+    path: str,
+    payload: Dict[str, Any] = Body(...),
+):
+    return await forward_request(request, f"{settings.BILLING_SERVICE_URL}/api/v1/billing/{path}")
+
+
+@router.patch("/billing/{path:path}")
+async def legacy_billing_patch(
+    request: Request,
+    path: str,
+    payload: Dict[str, Any] = Body(...),
+):
+    return await forward_request(request, f"{settings.BILLING_SERVICE_URL}/api/v1/billing/{path}")
+
+
+@router.delete("/billing/{path:path}")
+async def legacy_billing_delete(request: Request, path: str):
     return await forward_request(request, f"{settings.BILLING_SERVICE_URL}/api/v1/billing/{path}")
